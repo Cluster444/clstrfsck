@@ -2,36 +2,26 @@
 
 set -u
 
-usage() {
-	cat <<EOF
-clstrfsck-init 0.1
-
-The installer for clusterfsck development environment
-
-Usage: cluck-init
-EOF
-}
-
 main() {
-	local -a pkgs
-	pkgs=()
+  local -a pkgs
+  pkgs=()
 
-	has_tool curl || pkgs+=(curl)
-	has_tool git  || pkgs+=(git)
-	has_tool ruby || pkgs+=(ruby)
+  has_tool curl || pkgs+=(curl)
+  has_tool git  || pkgs+=(git)
+  has_tool ruby || pkgs+=(ruby)
 
-	if [ "${#pkgs[@]}" -gt 0 ]; then
-		say "Installing ${pkgs[@]}"
-		sudo apt install -qq -y "${pkgs[@]}"
-	else
-		say "All packages installed!"
-	fi
+  if [ "${#pkgs[@]}" -gt 0 ]; then
+    say "Installing ${pkgs[@]}"
+    sudo apt install -qq -y "${pkgs[@]}"
+  else
+    say "All packages installed!"
+  fi
 
-	mkdir -p ~/.clstrfsck
-	git clone --depth 1 https://github.com/Cluster444/clstrfsck ~/.clstrfsck
-	cd ~/.clstrfsck
+  if [ ! -d ~/.clstrfsck ]; then
+    git clone --depth 1 https://github.com/Cluster444/clstrfsck ~/.clstrfsck
+  fi
 
-	exec bin/install
+  exec "~/.clstrfsck/install"
 }
 
 #### output helpers
